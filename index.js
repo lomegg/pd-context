@@ -40,7 +40,7 @@ window.cleanupContextMenu = function(speed){
 	setTimeout(function(){
 		target.remove();
 	}, speed);
-}
+};
 
 // context menu listener
 $(document).on('contextmenu', '#chat .chatnick', function(e) {
