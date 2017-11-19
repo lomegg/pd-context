@@ -141,8 +141,8 @@ function showMessageInContextMenu($element, message, status){
 	$element.text(messageText);
 }
 
+// request friendship by chat nickname
 function sendContextFriendshipRequest(nickname){
-
 	if (!nickname){return false;}
 
 	var data = initFriendsAJAXData(),
@@ -169,9 +169,6 @@ function sendContextFriendshipRequest(nickname){
 		showMessageInContextMenu($element, callbackData.message, 'failure');
 		cleanupContextMenu();
 	};
-
-	//AJAXprocessor('POST', "/api/friendship/request-by-nick/", data, callback, errorCallback);
-	//AJAXprocessor('POST', "/api/friendship/request-by-nick/", data, callback, errorCallback);
 
 	$.ajax({
 		url: urlPrefix + "/api/friendship/request-by-nick/",
