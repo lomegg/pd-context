@@ -22,6 +22,7 @@ if (style.styleSheet){
 head.appendChild(style);
 
 // code
+
 // insert pm sequence into chat
 function privateChatMessage(chatId){
 	$("#chattextbox").val('!pm ' + chatId + ' ');
@@ -29,6 +30,16 @@ function privateChatMessage(chatId){
 		document.getElementById("chattextbox").focus();
 		isTyping = true;
 	}
+}
+
+// remove currently existing context menu with fade
+window.cleanupContextMenu = function(speed){
+	if (!speed){speed = 1500;}
+	var target = $('body .chat-context-menu');
+	target.fadeOut(speed);
+	setTimeout(function(){
+		target.remove();
+	}, speed);
 }
 
 // context menu listener
@@ -42,19 +53,30 @@ $(document).on('contextmenu', '#chat .chatnick', function(e) {
 	if (!target.hasClass('chatnick')){target = target.closest('chatnick');}
 	var chatNick = target.text().slice(0, -1);
 	var chatId = target.attr('title');
-	var locale = settedlang || 'ru';
+	var locale = settedlang && settedlang == 'ru' ? 'ru' : 'en';
 	// get the menu items
 	var queue = [];
 
+	var texts = {
+		sendMessage: {
+			ru: 'Личное сообщение',
+			en: 'Private message'
+		},
+		addToFriends: {
+			ru: 'Добавить в друзья',
+			en: 'Add to friends'
+		}
+	}
+
 	// send private message
 	if (window.settednick !== chatNick){
-		var pm = '<a class="send-private-message" data-chat-id="' + chatId + '">Send private message</a>';
+		var pm = '<a class="send-private-message" data-chat-id="' + chatId + '">' + texts.sendMessage[locale] + '</a>';
 		queue.push(pm);
 	}
 
 	// add to friends
 	if (window.donid && window.donid.length && (window.settednick !== chatNick)){
-		var addToFriends = '<a class="context-add-to-friends" data-chat-nick="' + chatNick + '">Add to friends</a>';
+		var addToFriends = '<a class="context-add-to-friends" data-chat-nick="' + chatNick + '">' + texts.addToFriends[locale] + '</a>';
 		queue.push(addToFriends);
 	}
 
@@ -89,15 +111,6 @@ $(document).on('contextmenu', '#chat .chatnick', function(e) {
 	});
 	return false;
 });
-
-function cleanupContextMenu(speed){
-	if (!speed){speed = 1500;}
-	var target = $('body .chat-context-menu');
-	target.fadeOut(speed);
-	setTimeout(function(){
-		target.remove();
-	}, speed);
-}
 
 // remove current context menu
 $(document).on('contextmenu', function(e) {
